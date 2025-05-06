@@ -32,3 +32,31 @@ WHAT I NEED TO LEARN FIRST
 fsanitiza=address
 fsanitize=thread
 
+What a pthread_create?
+> a function that create thread
+Then what is a thread??
+> a small program inside a main program, its running parallel with other thread
+> example, Im solving a math problem and at the same time i ask my friend to help solve the 2nd math problem
+	at the same time.
+> When we tread is created, they will shared the same memory and data with the main
+> So since everything is shared so does the variable
+> THINGS TO CONSIDER: IF ONE THREAD CRASHES, MIGHT CRASHES THE WHOLE PROGRAM
+
+ptheard_t tid; where tid is: Thread ID, works same as pid
+pthread_join(pthread_t thread, void **retval(return value))<< So when put NULL means we dont care bout the return value
+Example;
+
+main()
+ └── calls pthread_create → spawns Thread A
+         └── Thread A runs function
+ └── calls pthread_join(Thread A)
+         └── main waits here until Thread A is done
+ └── continues after thread ends
+
+>THREAD CAN ONLY BE JOINED ONCE,
+> WHEN A THREAD IS DETACHED, IT CANNOT BE JOINED AGAIN
+
+pthread_create (pthread_t *thre ad(tid), const pthread_attr_t * attr(optional thread attributes like stack usually null), void *(*start routine)(void *)(the function that new
+thread will run, must take void * and return void*)(RUNNING THE FUNCTION), void *arg(the argument that we want to pass, usually NULL));
+
+
