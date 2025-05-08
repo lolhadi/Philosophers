@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:04 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/07 15:18:08 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/08 13:13:56 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,23 @@ int	init_data(t_data *data, int argc, char **argv)
 		return (error_msg("Error: Mutex initialization failed"));
 	data->sim_over = false;
 	return (0);
+}
+
+void	init_philos(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	data->philos = malloc(sizeof(t_philo) * data->num_philos);
+	if (!data->philos)
+		return ;
+	while (++i < data->num_philos)
+	{
+		data->philos[i].id = i + 1;
+		data->philos[i].last_meal = get_time();
+		data->philos[i].eat_count = 0;
+		data->philos[i].data = data;
+		data->philos[i].left_fork = &data->forks[i];
+		data->philos[i].right_fork = &data->forks[(i + 1) % data->num_philos];
+	}
 }
