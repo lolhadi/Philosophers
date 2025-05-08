@@ -6,16 +6,12 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/07 13:46:16 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:15:43 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_param()
-{
-
-}
 static int	valid_num(char *str)
 {
 	int	i;
@@ -70,9 +66,14 @@ int main(int argc, char **argv)
 	if (init_data(&data, argc, argv) != 0)
 		return (1);
 	// // Create threads for philosophers
-	// init_philos();
+	init_philos(&data);
 	// // Create threads for monitors
-	// init_waiter();
+	if (create_thread(&data) != 0)
+	{
+		free_resources(&data);
+		return (1);
+	}
+
 	// // Wait for threads to finish
 	// wait_for_threads();
 	// // Clean up resources
