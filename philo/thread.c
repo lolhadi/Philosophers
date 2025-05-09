@@ -6,11 +6,24 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/08 14:16:43 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:11:15 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	think(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->print_mutex);
+	print_status(philo, "is thinking");
+	pthread_mutex_unlock(&philo->data->print_mutex);
+}
+void set_sim_end(t_data *data)
+{
+	pthread_mutex_lock(&data->death_mutex);
+	data->sim_over = true;
+	pthread_mutex_unlock(&data->death_mutex);
+}
 
 void *monitor_philos(void *arg)
 {
@@ -20,7 +33,8 @@ void *monitor_philos(void *arg)
 
 	data = (t_data *)arg;
 	full_philos = 0;// need to check later if the any effect on the program
-	while (!data->sim_over)
+	printf("monitor thread\n");
+	while (!sim_ended(data))
 	{
 		i = -1;
 		full_philos = 0;
@@ -31,10 +45,14 @@ void *monitor_philos(void *arg)
 			if (data->must_eat != -1
 				&& data->philos[i].eaten >= data->must_eat)
 				full_philos++;
-			if (full_philos == data->num_philos)
-				sim_ended(data);
-			ft_usleep(1000);
 		}
+		if (full_philos == data->num_philos)
+		{
+			printf("inhere now \n");
+				set_sim_end(data);
+				return (NULL);
+		}
+		ft_usleep(1000);
 	}
 	return (NULL);
 }
@@ -53,7 +71,7 @@ void *philo_routine(void *arg)
 	}
 	return (NULL);
 }
-int	create_thread(t_data *data)
+void	create_thread(t_data *data)
 {
 	int	i;
 	pthread_t	monitor;
@@ -64,14 +82,21 @@ int	create_thread(t_data *data)
 	{
 		if (pthread_create(&data->philos[i].thread, NULL,
 						philo_routine, &data->philos[i]) != 0)
-		return(error_msg("Error: Thread creation failed"));
-
+		{
+			printf("Error: Thread creation failed\n");
+			sim_ended(data);
+			return ;
+		}
 	}
+		printf("before monitor thread\n");
 	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
-		return (error_msg("Error: Monitor thread creation failed"));
+		{
+			printf("Error: Monitor thread creation failed\n");
+			sim_ended(data);
+			return ;
+		}
 	i = -1;
 	while (++i < data->num_philos)
 		pthread_join(data->philos[i].thread, NULL);
 	pthread_join(monitor, NULL);
-	return (0);
 }

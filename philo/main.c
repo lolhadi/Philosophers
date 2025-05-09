@@ -6,11 +6,35 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/08 14:15:43 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:26:43 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void clean_up(t_data *data)
+{
+	int	i;
+
+	if (data->forks)
+	{
+		i = -1;
+		while (++i < data->num_philos)
+			pthread_mutex_destroy(&data->forks[i]);
+		free(data->forks);
+	}
+	pthread_mutex_destroy(&data->print_mutex);
+	pthread_mutex_destroy(&data->death_mutex);
+	if (data->philos)
+		free(data->philos);
+	data->forks = NULL;
+	data->philos = NULL;
+}
+int	error_msg(char *str)
+{
+	printf("%s\n", str);
+	return (1);
+}
 
 static int	valid_num(char *str)
 {
@@ -63,23 +87,16 @@ int main(int argc, char **argv)
 	if (check_args(argv))
 		return (1);
 	// Initialize data(mutexes, timers, etc.)
+	printf("before init\n");
 	if (init_data(&data, argc, argv) != 0)
 		return (1);
+	printf("after init\n");
 	// // Create threads for philosophers
 	init_philos(&data);
 	// // Create threads for monitors
-	if (create_thread(&data) != 0)
-	{
-		free_resources(&data);
-		return (1);
-	}
-
-	// // Wait for threads to finish
-	// wait_for_threads();
+	printf("before create_thread\n");
+	create_thread(&data);
 	// // Clean up resources
-	// clean_up();
-	// // Free allocated memory
-	// free_resources();
+	clean_up(&data);
 	return (0);
-
 }

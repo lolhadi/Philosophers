@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 
 OBJS_DIR = objs
-SRCS_FILES = main utils init
+SRCS_FILES = main utils init thread action
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(SRCS_FILES)))
 

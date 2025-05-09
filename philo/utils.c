@@ -6,17 +6,11 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:32:14 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/08 14:14:21 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:54:57 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	error_msg(char *str)
-{
-	printf("%s\n", str);
-	return (1);
-}
 
 int	ft_atoi(char *str)
 {
@@ -31,15 +25,16 @@ int	ft_atoi(char *str)
 	return((int)num);
 }
 
-bool	sim_ended(t_data *data)
+int	sim_ended(t_data *data)
 {
-	bool	ret;
+	int	ret;
 
 	pthread_mutex_lock(&data->death_mutex);
 	ret = data->sim_over;
 	pthread_mutex_unlock(&data->death_mutex);
 	return (ret);
 }
+
 
 void	print_status(t_philo *philo, char *status)
 {

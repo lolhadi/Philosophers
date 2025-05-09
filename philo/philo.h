@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:31 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/08 14:16:34 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:56:03 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_data
 //UTILS.c
 int		ft_atoi(char *str);
 int		error_msg(char *str);
-bool		sim_ended(t_data *data);
+int		sim_ended(t_data *data);
 void		print_status(t_philo *philo, char *status);
 long long	get_time(void);
 void		ft_usleep(long long time);
@@ -67,7 +67,7 @@ void		init_philos(t_data *data);
 //THREAD.c
 void		*philo_routine(void *arg);
 void		*monitor_philos(void *arg);
-int			create_thread(t_data *data);
+void			create_thread(t_data *data);
 int			check_starve(t_philo *philo);
 void		eat(t_philo *philo);
 void		think(t_philo *philo);
