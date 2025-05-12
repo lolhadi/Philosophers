@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/09 12:26:43 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:31:57 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ void clean_up(t_data *data)
 			pthread_mutex_destroy(&data->forks[i]);
 		free(data->forks);
 	}
-	pthread_mutex_destroy(&data->print_mutex);
-	pthread_mutex_destroy(&data->death_mutex);
+	pthread_mutex_destroy(&data->dead_lock);
+	pthread_mutex_destroy(&data->print_lock);
+	pthread_mutex_destroy(&data->dining_lock);
 	if (data->philos)
 		free(data->philos);
 	data->forks = NULL;
 	data->philos = NULL;
 }
+
 int	error_msg(char *str)
 {
 	printf("%s\n", str);
@@ -88,14 +90,12 @@ int main(int argc, char **argv)
 		return (1);
 	// Initialize data(mutexes, timers, etc.)
 	printf("before init\n");
-	if (init_data(&data, argc, argv) != 0)
+	if (init_data(&data, argv) != 0)
 		return (1);
 	printf("after init\n");
-	// // Create threads for philosophers
-	init_philos(&data);
 	// // Create threads for monitors
 	printf("before create_thread\n");
-	create_thread(&data);
+	feast(&data);
 	// // Clean up resources
 	clean_up(&data);
 	return (0);

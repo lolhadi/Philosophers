@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:31 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/09 12:56:03 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:34:29 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,19 @@
 typedef struct s_philo
 {
 	int		id;
-	int		eat_count;
+	int		eating;
+	int		meal_count;
 	int		eaten;
+	int		*dead_flag;
 	long long	last_meal;
-	pthread_t	thread; // Thread ID
-	struct s_data	*data; // Pointer to the data structure
+	long long	start_time;
+	pthread_t	thread;
+	pthread_mutex_t	*dead_lock;
+	pthread_mutex_t	*print_lock;
+	pthread_mutex_t	*dining_lock;
 	pthread_mutex_t	*left_fork; // Pointer to the left fork
 	pthread_mutex_t	*right_fork; // Pointer to the right fork
+	struct s_data	*data; // Pointer to the data structure
 }	t_philo;
 
 typedef struct s_data
@@ -42,34 +48,38 @@ typedef struct s_data
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		must_eat;// -1 if unlimited
-	long long	start_time;
+	int		dead_flag;
+
 	pthread_mutex_t	*forks; //Array of forks
-	pthread_mutex_t	print_mutex; // Mutex for printing
-	pthread_mutex_t	death_mutex; // protects the death status
-	bool	sim_over; // treu if a philosopher has died
+	pthread_mutex_t	dead_lock; // Mutex for printing
+	pthread_mutex_t	dining_lock;
+	pthread_mutex_t	print_lock;
+	// bool	sim_over; // treu if a philosopher has died
 	t_philo	*philos; // Array of philosophers
 }	t_data;
 
 //UTILS.c
 int		ft_atoi(char *str);
 int		error_msg(char *str);
-int		sim_ended(t_data *data);
 void		print_status(t_philo *philo, char *status);
 long long	get_time(void);
-void		ft_usleep(long long time);
+int		philo_sleep(long long milisec);
+int		is_dead(t_philo *philo);
+int		all_eat(t_data *data);
+void clean_up(t_data *data);
 
 //INIT.c
-int			init_data(t_data *data, int argc, char **argv);
+int			init_data(t_data *data, char **argv);
 int			init_mutexes(t_data *data);
 void		init_philos(t_data *data);
 
 
 //THREAD.c
 void		*philo_routine(void *arg);
-void		*monitor_philos(void *arg);
-void			create_thread(t_data *data);
-int			check_starve(t_philo *philo);
+void		*overseer(void *arg);
+void		feast(t_data *data);
+// int			check_starve(t_philo *philo);
 void		eat(t_philo *philo);
-void		think(t_philo *philo);
-void		philo_sleep(t_philo *philo);
+// void		think(t_philo *philo);
+void		sleeping(t_philo *philo);
 

@@ -3,100 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/09 14:11:15 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:35:19 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	think(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->data->print_mutex);
-	print_status(philo, "is thinking");
-	pthread_mutex_unlock(&philo->data->print_mutex);
-}
-void set_sim_end(t_data *data)
-{
-	pthread_mutex_lock(&data->death_mutex);
-	data->sim_over = true;
-	pthread_mutex_unlock(&data->death_mutex);
-}
 
-void *monitor_philos(void *arg)
+int	join_philo(t_data *data)
 {
-	t_data	*data;
 	int	i;
-	int 	full_philos;
 
-	data = (t_data *)arg;
-	full_philos = 0;// need to check later if the any effect on the program
-	printf("monitor thread\n");
-	while (!sim_ended(data))
+	i = -1;
+	while (++i < data->num_philos)
 	{
-		i = -1;
-		full_philos = 0;
-		while (++i < data->num_philos)
+		if (pthread_join(data->philos[i].thread, NULL) != 0)
 		{
-			if (check_starve(&data->philos[i]))
-				return (NULL);
-			if (data->must_eat != -1
-				&& data->philos[i].eaten >= data->must_eat)
-				full_philos++;
+			data->dead_flag = 1;
+			return (1);
 		}
-		if (full_philos == data->num_philos)
+	}
+	return (0);
+}
+int	create_philo(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->num_philos)
+	{
+		if(pthread_create(&data->philos[i].thread, NULL,
+				&philo_routine, &data->philos[i]) != 0)
 		{
-			printf("inhere now \n");
-				set_sim_end(data);
-				return (NULL);
+			data->dead_flag = 1;
+			return (1);
 		}
-		ft_usleep(1000);
+	}
+	return (0);
+}
+
+void	*overseer(void *arg)
+{
+	t_philo	*philo;
+	int		flag;
+
+	philo = (t_philo *)arg;
+	while (1)
+	{
+		pthread_mutex_lock(philo->dead_lock);
+		flag = philo->data->dead_flag;
+		pthread_mutex_unlock(philo->dead_lock);
+		if (flag || is_dead(philo) || all_eat(philo->data))
+			break ;
+		usleep(1000);
 	}
 	return (NULL);
 }
 void *philo_routine(void *arg)
 {
 	t_philo	*philo;
+	int		flag;
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->time_to_eat / 2);
-	while (!sim_ended(philo->data))
+		philo_sleep(3);
+	while (1)
 	{
-		think(philo);
+		pthread_mutex_lock(philo->dead_lock);
+		flag = philo->data->dead_flag;
+		pthread_mutex_unlock(philo->dead_lock);
+		if (flag)
+			break ;
 		eat(philo);
-		philo_sleep(philo);
+		sleeping(philo);
+		print_status(philo, "is thinking");
 	}
 	return (NULL);
 }
-void	create_thread(t_data *data)
+void	feast(t_data *data)
 {
-	int	i;
 	pthread_t	monitor;
 
-	i = -1;
-	data->start_time = get_time();
-	while (++i < data->num_philos)
+	if (pthread_create(&monitor, NULL, &overseer, data) != 0)
+		clean_up(data);
+	if (create_philo(data) != 0)
+		clean_up(data);
+	if (pthread_join(monitor, NULL) != 0)
 	{
-		if (pthread_create(&data->philos[i].thread, NULL,
-						philo_routine, &data->philos[i]) != 0)
-		{
-			printf("Error: Thread creation failed\n");
-			sim_ended(data);
-			return ;
-		}
+		data->dead_flag = 1;
+		clean_up(data);
 	}
-		printf("before monitor thread\n");
-	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
-		{
-			printf("Error: Monitor thread creation failed\n");
-			sim_ended(data);
-			return ;
-		}
-	i = -1;
-	while (++i < data->num_philos)
-		pthread_join(data->philos[i].thread, NULL);
-	pthread_join(monitor, NULL);
+	if (join_philo(data) != 0)
+		clean_up(data);
 }

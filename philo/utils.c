@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:32:14 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/09 12:54:57 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:27:53 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,20 @@ int	ft_atoi(char *str)
 	return((int)num);
 }
 
-int	sim_ended(t_data *data)
-{
-	int	ret;
-
-	pthread_mutex_lock(&data->death_mutex);
-	ret = data->sim_over;
-	pthread_mutex_unlock(&data->death_mutex);
-	return (ret);
-}
-
-
 void	print_status(t_philo *philo, char *status)
 {
-	pthread_mutex_lock(&philo->data->print_mutex);
-	if (!sim_ended(philo->data))
-	{
-		printf("%lld %d %s\n", get_time() - philo->data->start_time,
-			philo->id, status); // later try to id + 1
-	}
-	pthread_mutex_unlock(&philo->data->print_mutex);
+	long long	time;
+	int		dead_flag;
+
+	pthread_mutex_lock(philo->dead_lock);
+	dead_flag = *philo->dead_flag;
+	pthread_mutex_unlock(philo->dead_lock);
+	if (dead_flag)
+		return ;
+	time = get_time() - philo->start_time;
+	pthread_mutex_lock(philo->print_lock);
+	printf("%lld %d %s\n", time, philo->id, status); //check nanti
+	pthread_mutex_unlock(philo->print_lock);
 }
 long long	get_time(void)
 {
@@ -56,11 +50,12 @@ long long	get_time(void)
 	return (time);
 }
 
-void ft_usleep(long long time)
+int	philo_sleep(long long milisec)
 {
 	long long	start_time;
 
 	start_time = get_time();
-	while (get_time() - start_time < time)
-		usleep(100);
+	while (get_time() - start_time < milisec)
+		usleep(500);
+	return (0);
 }

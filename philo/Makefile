@@ -1,9 +1,9 @@
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 
 OBJS_DIR = objs
-SRCS_FILES = main utils init thread action
+SRCS_FILES = main utils init thread action action2
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(SRCS_FILES)))
 
