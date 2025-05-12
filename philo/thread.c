@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:35:19 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:33:51 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ int	create_philo(t_data *data)
 
 void	*overseer(void *arg)
 {
-	t_philo	*philo;
-	int		flag;
+	t_data *data;
+	int	flag;
 
-	philo = (t_philo *)arg;
+	data = (t_data *)arg;
 	while (1)
 	{
-		pthread_mutex_lock(philo->dead_lock);
-		flag = philo->data->dead_flag;
-		pthread_mutex_unlock(philo->dead_lock);
-		if (flag || is_dead(philo) || all_eat(philo->data))
+		pthread_mutex_lock(&data->dead_lock);
+		flag = data->dead_flag;
+		pthread_mutex_unlock(&data->dead_lock);
+		if (flag || is_dead(data->philos) || all_eat(data))
 			break ;
 		usleep(1000);
 	}
@@ -90,12 +90,12 @@ void	feast(t_data *data)
 	if (pthread_create(&monitor, NULL, &overseer, data) != 0)
 		clean_up(data);
 	if (create_philo(data) != 0)
-		clean_up(data);
-	if (pthread_join(monitor, NULL) != 0)
 	{
-		data->dead_flag = 1;
-		clean_up(data);
+		pthread_join(monitor, NULL);
+		return (clean_up(data));
 	}
-	if (join_philo(data) != 0)
-		clean_up(data);
+	if (pthread_join(monitor, NULL) != 0)
+		data->dead_flag = 1;
+	join_philo(data);
+	clean_up(data);
 }

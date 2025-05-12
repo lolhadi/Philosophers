@@ -1,6 +1,6 @@
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g 
 
 OBJS_DIR = objs
 SRCS_FILES = main utils init thread action action2
@@ -28,4 +28,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all cealn fclean re
+.PHONY: all clean fclean re

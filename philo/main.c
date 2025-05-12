@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:31:57 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:54:08 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,9 @@ int main(int argc, char **argv)
 	if (check_args(argv))
 		return (1);
 	// Initialize data(mutexes, timers, etc.)
-	printf("before init\n");
 	if (init_data(&data, argv) != 0)
 		return (1);
-	printf("after init\n");
 	// // Create threads for monitors
-	printf("before create_thread\n");
 	feast(&data);
 	// // Clean up resources
 	clean_up(&data);

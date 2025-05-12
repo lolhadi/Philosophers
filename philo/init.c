@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:04 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:32:01 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:29:59 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,17 @@ int	init_mutexes(t_data *data)
 	int	i;
 
 	i = -1;
+	if (pthread_mutex_init(&data->dining_lock, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&data->print_lock, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&data->dead_lock, NULL) != 0)
+		return (1);
 	while (++i < data-> num_philos)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
-			return (error_msg("Error: Forks mutex initialization failed"));
+			return (error_msg("Fork Mutex failed"));
 	}
-	pthread_mutex_init(&data->dining_lock, NULL);
-	pthread_mutex_init(&data->print_lock, NULL);
-	pthread_mutex_init(&data->dead_lock, NULL);
 	return (0);
 }
 
