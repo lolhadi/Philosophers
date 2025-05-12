@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 14:33:51 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:39:02 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,12 @@ void	*overseer(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
+		is_dead(data->philos);
+		all_eat(data);
 		pthread_mutex_lock(&data->dead_lock);
 		flag = data->dead_flag;
 		pthread_mutex_unlock(&data->dead_lock);
-		if (flag || is_dead(data->philos) || all_eat(data))
+		if (flag == 1)
 			break ;
 		usleep(1000);
 	}

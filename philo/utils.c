@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:32:14 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:27:53 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:20:35 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,20 @@ void	print_status(t_philo *philo, char *status)
 	pthread_mutex_lock(philo->dead_lock);
 	dead_flag = *philo->dead_flag;
 	pthread_mutex_unlock(philo->dead_lock);
-	if (dead_flag)
-		return ;
-	time = get_time() - philo->start_time;
-	pthread_mutex_lock(philo->print_lock);
-	printf("%lld %d %s\n", time, philo->id, status); //check nanti
-	pthread_mutex_unlock(philo->print_lock);
+	if (dead_flag == 0)
+	{
+		time = get_time() - philo->start_time;
+		pthread_mutex_lock(philo->print_lock);
+		printf("%lld %d %s\n", time, philo->id, status); //check nanti
+		pthread_mutex_unlock(philo->print_lock);
+	}
 }
 long long	get_time(void)
 {
 	struct timeval	tv;
-	long long		time;
 
 	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	return (time);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 int	philo_sleep(long long milisec)

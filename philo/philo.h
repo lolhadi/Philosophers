@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:31 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:34:29 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:23:06 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int		error_msg(char *str);
 void		print_status(t_philo *philo, char *status);
 long long	get_time(void);
 int		philo_sleep(long long milisec);
-int		is_dead(t_philo *philo);
-int		all_eat(t_data *data);
+void		is_dead(t_philo *philo);
+void		all_eat(t_data *data);
 void clean_up(t_data *data);
 
 //INIT.c
