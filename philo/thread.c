@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 15:39:02 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:33:31 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ void	*overseer(void *arg)
 	while (1)
 	{
 		is_dead(data->philos);
-		all_eat(data);
 		pthread_mutex_lock(&data->dead_lock);
 		flag = data->dead_flag;
 		pthread_mutex_unlock(&data->dead_lock);
 		if (flag == 1)
 			break ;
+		all_eat(data);
 		usleep(1000);
 	}
 	return (NULL);
@@ -77,8 +77,15 @@ void *philo_routine(void *arg)
 		pthread_mutex_lock(philo->dead_lock);
 		flag = philo->data->dead_flag;
 		pthread_mutex_unlock(philo->dead_lock);
-		if (flag)
+		if (flag == 1)
 			break ;
+		pthread_mutex_lock(&philo->data->dining_lock);
+		if (philo->data->must_eat != -1 && philo->meal_count >= philo->data->must_eat)
+		{
+			pthread_mutex_unlock(&philo->data->dining_lock);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->dining_lock);
 		eat(philo);
 		sleeping(philo);
 		print_status(philo, "is thinking");
@@ -99,5 +106,5 @@ void	feast(t_data *data)
 	if (pthread_join(monitor, NULL) != 0)
 		data->dead_flag = 1;
 	join_philo(data);
-	clean_up(data);
+	// clean_up(data);
 }
