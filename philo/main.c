@@ -6,13 +6,13 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 13:54:08 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:11:30 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void clean_up(t_data *data)
+void	clean_up(t_data *data)
 {
 	int	i;
 
@@ -63,37 +63,34 @@ int	check_args(char **argv)
 	while (argv[++i])
 	{
 		if (!valid_num(argv[i]))
-			return (error_msg("Error: Invalid argument"));
+			return (error_msg("Invalid argument"));
 		num = ft_atoi(argv[i]);
 		if (num > INT_MAX)
-			return (error_msg("Error: Argument too large"));
+			return (error_msg("Argument too large"));
 		if (i == 1 && (num < 1 || num > PHILO_MAX))
-			return (error_msg("Error: Number of philosophers must be 1 - 200"));
+			return (error_msg("philosopher count must be between 1 and 200"));
 		else if (i >= 2 && i <= 4 && num < MIN_TIME)
-			return (error_msg("Error: Time values must be at least 60ms"));
+			return (error_msg("Time values must be at least 60ms"));
 		else if (i == 5 && num < MIN_MEALS)
-			return (error_msg("Error: Number of times to eat must be at least 1"));
+			return (error_msg("Meal count must be at least 1"));
 	}
 	return (0);
 }
-int main(int argc, char **argv)
+
+int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (argc !=5 && argc != 6)
+	if (argc != 5 && argc != 6)
 	{
 		printf("Error: Invalid number of arguments\n");
 		return (1);
 	}
-	// Check if the arguments are valid integers
 	if (check_args(argv))
 		return (1);
-	// Initialize data(mutexes, timers, etc.)
 	if (init_data(&data, argv) != 0)
 		return (1);
-	// // Create threads for monitors
 	feast(&data);
-	// // Clean up resources
 	clean_up(&data);
 	return (0);
 }

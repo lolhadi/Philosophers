@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:04 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/14 21:47:27 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:11:50 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	init_data(t_data *data, char **argv)
 	data->philos = malloc (sizeof(t_philo) * data->num_philos);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->num_philos);
 	if (!data->philos || !data->forks)
-		return (error_msg("Error: Philosopher allocation failed"));
+		return (error_msg("Philosopher allocation failed"));
 	init_mutexes(data);
 	init_philos(data, argv);
 	return (0);

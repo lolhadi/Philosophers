@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:32:14 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/14 23:02:10 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:48:10 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ int	ft_atoi(char *str)
 		num = num * 10 + (*str - '0');
 		str++;
 	}
-	return((int)num);
+	return ((int)num);
 }
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s1[i] || s2[i])
@@ -40,20 +41,18 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 void	print_status(t_philo *philo, char *status)
 {
-	long long	time;
-	int		dead_flag;
-
-	time = get_time() - philo->start_time;
 	pthread_mutex_lock(philo->dead_lock);
-	dead_flag = *philo->dead_flag;
-	pthread_mutex_unlock(philo->dead_lock);
-	if (dead_flag == 0 || ft_strcmp(status, "died") == 0 || philo->meal_count == philo->must_eat)
+	if (*philo->dead_flag && ft_strcmp(status, "died") != 0)
 	{
-		pthread_mutex_lock(philo->print_lock);
-		printf("%lld %d %s\n", time, philo->id, status); //check nanti
-		pthread_mutex_unlock(philo->print_lock);
+		pthread_mutex_unlock(philo->dead_lock);
+		return ;
 	}
+	pthread_mutex_unlock(philo->dead_lock);
+	pthread_mutex_lock(philo->print_lock);
+	printf("%lld %d %s\n", get_time() - philo->start_time, philo->id, status);
+	pthread_mutex_unlock(philo->print_lock);
 }
+
 long long	get_time(void)
 {
 	struct timeval	tv;

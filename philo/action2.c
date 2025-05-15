@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 10:22:28 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/14 23:06:30 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:26:25 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	is_dead(t_philo *philo)
 {
-	int	i;
+	int			i;
 	long long	curr_time;
-	int	eating;
+	int			eating;
 
 	i = -1;
 	while (++i < philo->num_philos)
@@ -32,9 +32,8 @@ void	is_dead(t_philo *philo)
 			pthread_mutex_lock(philo->dead_lock);
 			*philo->dead_flag = 1;
 			pthread_mutex_unlock(philo->dead_lock);
-			break;
+			break ;
 		}
-		pthread_mutex_unlock(philo->dining_lock);
 	}
 }
 
