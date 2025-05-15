@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
+/*   By: muhabin- <muhabin-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:31 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/12 15:23:06 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/14 21:48:12 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,15 @@
 typedef struct s_philo
 {
 	int		id;
+	int		num_philos;
 	int		eating;
 	int		meal_count;
 	int		eaten;
 	int		*dead_flag;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		must_eat;// -1 if unlimited
 	long long	last_meal;
 	long long	start_time;
 	pthread_t	thread;
@@ -44,10 +49,8 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int		num_philos;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		must_eat;// -1 if unlimited
+
+
 	int		dead_flag;
 
 	pthread_mutex_t	*forks; //Array of forks
@@ -65,13 +68,13 @@ void		print_status(t_philo *philo, char *status);
 long long	get_time(void);
 int		philo_sleep(long long milisec);
 void		is_dead(t_philo *philo);
-void		all_eat(t_data *data);
+void		all_eat(t_philo *philo);
 void clean_up(t_data *data);
 
 //INIT.c
 int			init_data(t_data *data, char **argv);
 int			init_mutexes(t_data *data);
-void		init_philos(t_data *data);
+void		init_philos(t_data *data, char **argv);
 
 
 //THREAD.c
