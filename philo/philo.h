@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:31 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:47:14 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:08:02 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct s_philo
 	int				num_philos;
 	int				eating;
 	int				meal_count;
-	int				eaten;
 	int				*dead_flag;
 	int				time_to_die;
 	int				time_to_eat;

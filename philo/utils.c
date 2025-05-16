@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:32:14 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:48:10 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:05:38 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 void	print_status(t_philo *philo, char *status)
 {
+	long long	time;
+
+	time = get_time() - philo->start_time;
 	pthread_mutex_lock(philo->dead_lock);
 	if (*philo->dead_flag && ft_strcmp(status, "died") != 0)
 	{
@@ -49,7 +52,7 @@ void	print_status(t_philo *philo, char *status)
 	}
 	pthread_mutex_unlock(philo->dead_lock);
 	pthread_mutex_lock(philo->print_lock);
-	printf("%lld %d %s\n", get_time() - philo->start_time, philo->id, status);
+	printf("%lld %d %s\n", time, philo->id, status);
 	pthread_mutex_unlock(philo->print_lock);
 }
 

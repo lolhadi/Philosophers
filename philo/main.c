@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:22:05 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:11:30 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:26:41 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	check_args(char **argv)
 		if (num > INT_MAX)
 			return (error_msg("Argument too large"));
 		if (i == 1 && (num < 1 || num > PHILO_MAX))
-			return (error_msg("philosopher count must be between 1 and 200"));
+			return (error_msg("Philosopher count must be between 1 and 200"));
 		else if (i >= 2 && i <= 4 && num < MIN_TIME)
 			return (error_msg("Time values must be at least 60ms"));
 		else if (i == 5 && num < MIN_MEALS)

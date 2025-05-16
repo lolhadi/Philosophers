@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 10:22:28 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:26:25 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:08:15 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	all_eat(t_philo *philo)
 	while (++i < philo->num_philos)
 	{
 		pthread_mutex_lock(philo->dining_lock);
-		if (philo[i].meal_count >= philo->must_eat)
+		if (philo[i].meal_count == philo->must_eat)
 			full += 1;
 		pthread_mutex_unlock(philo->dining_lock);
 	}

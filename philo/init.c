@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:04 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:11:50 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:07:57 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,13 @@ void	init_philos(t_data *data, char **argv)
 		data->philos[i].num_philos = data->num_philos;
 		data->philos[i].id = i + 1;
 		data->philos[i].eating = 0;
-		data->philos[i].eaten = 0;
 		data->philos[i].time_to_die = ft_atoi(argv[2]);
 		data->philos[i].time_to_eat = ft_atoi(argv[3]);
 		data->philos[i].time_to_sleep = ft_atoi(argv[4]);
 		data->philos[i].must_eat = -1;
 		if (argv[5])
 			data->philos[i].must_eat = ft_atoi(argv[5]);
-		data->philos[i].meal_count = -1;
+		data->philos[i].meal_count = 0;
 		data->philos[i].start_time = get_time();
 		data->philos[i].last_meal = get_time();
 		data->philos[i].dead_flag = &data->dead_flag;

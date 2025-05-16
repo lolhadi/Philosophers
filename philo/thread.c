@@ -6,7 +6,7 @@
 /*   By: muhabin- <muhabin-@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:41:53 by muhabin-          #+#    #+#             */
-/*   Updated: 2025/05/15 13:24:55 by muhabin-         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:49:57 by muhabin-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,13 @@ void	*philo_routine(void *arg)
 		pthread_mutex_unlock(philo->dead_lock);
 		if (flag == 1)
 			break ;
+		pthread_mutex_lock(philo->dining_lock);
+		if (philo->must_eat != -1 && philo->meal_count >= philo->must_eat)
+		{
+			pthread_mutex_unlock(philo->dining_lock);
+			break ;
+		}
+		pthread_mutex_unlock(philo->dining_lock);
 		eat(philo);
 		sleeping(philo);
 		print_status(philo, "is thinking");
